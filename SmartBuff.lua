@@ -1097,49 +1097,54 @@ function SMARTBUFF_Check(mode, force)
               --SMARTBUFF_AddMsgD(cBuffs[i].BuffG .. " (" .. rank .. ") " .. m .. " of " .. n .. " not buffed, lowest/highest level " .. uLevelL .. "/" .. uLevelU);            
   	          if (idL ~= nil and idU ~= nil and idL == idU and rank > 0 and m >= SMARTBUFF_Options.GrpBuffSize and n >= SMARTBUFF_Options.GrpBuffSize) then
     	        
-                reagent = cBuffs[i].ReagentG[rank];
-                if (reagent) then
+                if (cBuffs[i].ReagentG) then
+                  reagent = cBuffs[i].ReagentG[rank];
                   rc = SMARTBUFF_CountReagent(reagent);
-                  if (rc > 0) then
-                    currentUnit = nil;
-                    currentSpell = nil;
-                    j = SMARTBUFF_doCast(unitB, idU, cBuffs[i].ASG, nil, SMARTBUFF_CONST_GROUP)
-                    --SMARTBUFF_AddMsgD("Buffing group (" .. unitB .. ") " .. subgroup .. ", " .. j .. ", " .. cBuffs[i].ASG .. ", ");
- 	                  if (j == 0) then
-                      SMARTBUFF_AddMsg(SMARTBUFF_MSG_GROUP .. " " .. subgroup .. ": " .. cBuffs[i].BuffG .. " " .. SMARTBUFF_MSG_BUFFED);
+                else
+                  rc = 0
+                  reagent = nil
+                end
+
+                rc = SMARTBUFF_CountReagent(reagent);
+                if (not reagent or rc > 0) then
+                  currentUnit = nil;
+                  currentSpell = nil;
+                  j = SMARTBUFF_doCast(unitB, idU, cBuffs[i].ASG, nil, SMARTBUFF_CONST_GROUP)
+                  --SMARTBUFF_AddMsgD("Buffing group (" .. unitB .. ") " .. subgroup .. ", " .. j .. ", " .. cBuffs[i].ASG .. ", ");
+                  if (j == 0) then
+                    SMARTBUFF_AddMsg(SMARTBUFF_MSG_GROUP .. " " .. subgroup .. ": " .. cBuffs[i].BuffG .. " " .. SMARTBUFF_MSG_BUFFED);
+                    if (reagent) then
                       SMARTBUFF_AddMsg(SMARTBUFF_MSG_STOCK .. " " .. reagent .. " = " .. (rc - 1));
-                      --isChecking = false;
-                      
-                      if (sPlayerClass == "PALADIN") then
-                        local _, uc = UnitClass(unitB);
-                        if (cBuffTimer[uc] == nil) then
-                          cBuffTimer[uc] = { };
-                        end
-                        cBuffTimer[uc][cBuffs[i].BuffG] = GetTime();                      
-                      else
-                        if (cBuffTimer[subgroup] == nil) then
-                          cBuffTimer[subgroup] = { };
-                        end
-                        cBuffTimer[subgroup][cBuffs[i].BuffG] = GetTime();
-                      end
-                      
-                      for j, unit in tmpUnits do
-                        if (cBuffTimer[unit] == nil) then
-                          cBuffTimer[unit] = { };
-                        end
-                        cBuffTimer[unit][cBuffs[i].BuffS] = nil;
-                        --cBuffTimer[unit][cBuffs[i].BuffG] = GetTime();
-                      end
-                      
-                      return;
                     end
-  	              else
-  	                SMARTBUFF_AddMsgWarn(SMARTBUFF_MSG_NOREAGENT .. " " .. reagent .. "! " .. cBuffs[i].BuffG .. " " .. SMARTBUFF_MSG_DEACTIVATED);
-  	                SMARTBUFF_Buffs[ct][cBuffs[i].BuffS].EnableG = false;
-  	              end
-  	            else
-  	              --SMARTBUFF_AddMsgD("Reagent = nil");
-  	            end
+                    --isChecking = false;
+                    
+                    if (sPlayerClass == "PALADIN") then
+                      local _, uc = UnitClass(unitB);
+                      if (cBuffTimer[uc] == nil) then
+                        cBuffTimer[uc] = { };
+                      end
+                      cBuffTimer[uc][cBuffs[i].BuffG] = GetTime();                      
+                    else
+                      if (cBuffTimer[subgroup] == nil) then
+                        cBuffTimer[subgroup] = { };
+                      end
+                      cBuffTimer[subgroup][cBuffs[i].BuffG] = GetTime();
+                    end
+                    
+                    for j, unit in tmpUnits do
+                      if (cBuffTimer[unit] == nil) then
+                        cBuffTimer[unit] = { };
+                      end
+                      cBuffTimer[unit][cBuffs[i].BuffS] = nil;
+                      --cBuffTimer[unit][cBuffs[i].BuffG] = GetTime();
+                    end
+                    
+                    return;
+                  end
+                else
+                  SMARTBUFF_AddMsgWarn(SMARTBUFF_MSG_NOREAGENT .. " " .. reagent .. "! " .. cBuffs[i].BuffG .. " " .. SMARTBUFF_MSG_DEACTIVATED);
+                  SMARTBUFF_Buffs[ct][cBuffs[i].BuffS].EnableG = false;
+                end
   	          end
   	        end
   	      end
