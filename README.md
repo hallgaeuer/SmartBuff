@@ -1,5 +1,12 @@
 # SmartBuff
-WoW 1.12.1 addon, updated for TurtleWoW. Automatically buff self/party/raid. Highly customisable.
+WoW 1.12.1 addon, based on https://github.com/Lexiebean/SmartBuff. Automatically buff self/party/raid. Highly customisable.
+
+Contains the following custom adjustments for a non public server I'm playing on:
+
+* Added buff 'Fear Ward' for Shaman, Druid and Paladin classes
+* Removed reagent requirement for group buffs
+
+These adjusments may only work with the english 1.12 client.
 
 ![SmartBuff](https://github.com/Lexiebean/SmartBuff/raw/main/Preview.png)
 
